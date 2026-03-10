@@ -1,27 +1,16 @@
-#include "ShapeFactory.hpp"
+#pragma once
 #include <iostream>
 
-class Rectangle : public Shape {
+class Rectangle {
 public:
-    std::string name() const override {
-	return "rectangle";
+    Rectangle(double side1, double side2) : side1(side1), side2(side2) {}
+
+    void compute() const {
+        std::cout << "Perimeter: " << (side1 + side2) * 2 << "\n";
+        std::cout << "Area: " << side1 * side2 << "\n";
     }
 
-    int requiredArgs() const override {
-	return 2;
-    }
-
-    void compute(const std::vector<double>& args) const override {
-	double side1 = args[0];
-	double side2 = args[1];
-	std::cout << "Perimeter: " << (side1 + side2) * 2 << std::endl;
-	std::cout << "Area: " << side1 * side2 << std::endl;
-    }
+private:
+    double side1;
+    double side2;
 };
-
-bool rectangleRegistered = []() {
-    ShapeFactory::registerType("rectangle", []() {
-	return std::make_unique<Rectangle>();
-    });
-    return true;
-}();

@@ -1,35 +1,48 @@
-#include "ShapeFactory.hpp"
-#include "Circle.hpp"
-#include "Square.hpp"
-#include "Rectangle.hpp"
+#include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
 
-
-int main(int argc, char* argv[])
-{
+#include "Circle.hpp"
+#include "Rectangle.hpp"
+#include "Square.hpp"
+int main(int argc, char* argv[]) {
     if (argc < 2) {
-	std::cout << "usage: ./describe_object <shape> [args]" << std::endl; }
-
-    std::string shape_name = argv[1];
-    auto shape = ShapeFactory::create(shape_name);
-
-    if (!shape) {
-	std::cout << "shape not found" << std::endl;
-	return 1;
+        std::cout << "usage: ./describe_object <shape> [args]\n";
+        return 1;
     }
 
-    if (argc - 2 < shape->requiredArgs()) {
-	std::cout << "provide suitable arguments for the shape" << std::endl;
-    }
-
+    std::string shape = argv[1];
     std::vector<double> args;
     for (int i = 2; i < argc; ++i) {
-	// convert string argument input to double and push into the args vector
-	args.push_back(std::stod(argv[i]));
+        args.push_back(std::atof(argv[i]));
     }
 
-    // calculate shape attributes based on the arguments vector
-    shape->compute(args);
+    if (shape == "circle") {
+        if (args.size() < 1) {
+            std::cout << "circle needs 1 argument (radius)\n";
+            return 1;
+        }
+        Circle c(args[0]);
+        c.compute();
+    } else if (shape == "square") {
+        if (args.size() < 1) {
+            std::cout << "square needs 1 argument (side)\n";
+            return 1;
+        }
+        Square s(args[0]);
+        s.compute();
+    } else if (shape == "rectangle") {
+        if (args.size() < 2) {
+            std::cout << "rectangle needs 2 arguments (side1 side2)\n";
+            return 1;
+        }
+        Rectangle r(args[0], args[1]);
+        r.compute();
+    } else {
+        std::cout << "unknown shape\n";
+        return 1;
+    }
 
     return 0;
 }
